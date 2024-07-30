@@ -1,13 +1,20 @@
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
-## rollup Tutorial
 
-### Import Library and Data
+# rollup
+Grouping Sets, With Rollup and With Cube implementation for R dataframe
+
+## Install
+```{r}
+library(devtools)
+devtools::install_github("JuYoungAhn/rollup")
+```
+
+## Usage
 ```{r setup}
 library(rollup)
 data("web_service_data")
@@ -29,7 +36,7 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = product_view_cnt_cat, values_from = avg_pv_cnt)
 ```
 ### with_cube
-- simply add all possible combinations of grouping variables
+- with_cube add all possible combinations of grouping variables
 - easily add row sum and column sum in cross table
 ```{r}
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
@@ -42,8 +49,8 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 #   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 ```
 ### with_rollup
-- add all possible combinations of grouping variables in descending order
-- easily calculate group sum and total sum (DAU and MAU in this example)
+- easily add all possible combinations of grouping variables in descending order
+- calculate group sum and total sum (DAU and MAU in this example)
 ```{r}
 web_service_data %>% 
   group_by(date_id) %>% with_rollup() %>% 
@@ -56,8 +63,8 @@ web_service_data %>%
 ```
 
 
-### appendix) sparklyr
-- grouping_sets, with_cube and with_rollup are also available in sparklyr
+### sparklyr
+- All functions are also available in sparklyr (spark dataframe)
 ```{r}
 # example usage with Spark DataFrame
 library(sparklyr)

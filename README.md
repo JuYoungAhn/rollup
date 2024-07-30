@@ -1,8 +1,29 @@
 
 
-## rollup Tutorial
+# rollup
+Grouping Sets, With Rollup and With Cube implementation for R dataframe
 
-### Import Library and Data
+## Install
+
+```r
+library(devtools)
+devtools::install_github("JuYoungAhn/rollup")
+#> Downloading GitHub repo JuYoungAhn/rollup@HEAD
+#> ── R CMD build ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#>      checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a64767aac/JuYoungAhn-rollup-6672dfc/DESCRIPTION’ ...  ✔  checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a64767aac/JuYoungAhn-rollup-6672dfc/DESCRIPTION’ (369ms)
+#>   ─  preparing ‘rollup’:
+#>    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
+#>   ─  checking for LF line-endings in source and make files and shell scripts
+#>   ─  checking for empty or unneeded directories
+#>   ─  building ‘rollup_0.0.0.tar.gz’
+#>      
+#> 
+#> '/home/dan-ahn/R/x86_64-pc-linux-gnu-library/4.3'의 위치에 패키지(들)을 설치합니다.
+#> (왜냐하면 'lib'가 지정되지 않았기 때문입니다)
+#> Warning in i.p(...): 패키지 '/tmp/Rtmpeo2bTw/file1c646a67562b02/rollup_0.0.0.tar.gz'의 설치가 0이 아닌 종료상태를 가졌습니다
+```
+
+## Usage
 
 ```r
 library(rollup)
@@ -29,8 +50,6 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
   group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age')) %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt))
 #> `summarise()` has grouped output by 'gender'. You can override using the `.groups` argument.
-#> [1] "gender" "age"   
-#> [1] "avg_pv_cnt"
 #> # A tibble: 20 × 3
 #>    gender age   avg_pv_cnt
 #>    <chr>  <fct>      <dbl>
@@ -60,8 +79,6 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
   group_by(gender, age, product_view_cnt_cat) %>% grouping_sets('product_view_cnt_cat', c('product_view_cnt_cat', 'gender','age')) %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = product_view_cnt_cat, values_from = avg_pv_cnt)
 #> `summarise()` has grouped output by 'product_view_cnt_cat', 'gender'. You can override using the `.groups` argument.
-#> [1] "gender" "age"   
-#> [1] "product_view_cnt_cat" "avg_pv_cnt"
 #> # A tibble: 13 × 11
 #>    gender age       X `20%` `40%` `50%` `60%` `70%` `80%` `90%` `100%`
 #>    <chr>  <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
@@ -80,7 +97,7 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 #> 13 M      60    3.06  2.69   4    3.5    0     8     2     1     NA
 ```
 ### with_cube
-- simply add all possible combinations of grouping variables
+- with_cube add all possible combinations of grouping variables
 - easily add row sum and column sum in cross table
 
 ```r
@@ -88,8 +105,6 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
   group_by(gender, age) %>% with_cube() %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 #> `summarise()` has grouped output by 'gender'. You can override using the `.groups` argument.
-#> [1] "gender" "age"   
-#> [1] "avg_pv_cnt"
 #> # A tibble: 3 × 8
 #>   gender  `NA`  `10`  `20`  `30`  `40`  `50`  `60`
 #>   <chr>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
@@ -103,15 +118,13 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 #   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 ```
 ### with_rollup
-- add all possible combinations of grouping variables in descending order
-- easily calculate group sum and total sum (DAU and MAU in this example)
+- easily add all possible combinations of grouping variables in descending order
+- calculate group sum and total sum (DAU and MAU in this example)
 
 ```r
 web_service_data %>% 
   group_by(date_id) %>% with_rollup() %>% 
   summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
-#> [1] "date_id"
-#> [1] "user_cnt"
 #> # A tibble: 31 × 2
 #>    date_id    user_cnt
 #>    <chr>         <int>
@@ -134,8 +147,8 @@ web_service_data %>%
 ```
 
 
-### appendix) sparklyr
-- grouping_sets, with_cube and with_rollup are also available in sparklyr
+### sparklyr
+- All functions are also available in sparklyr (spark dataframe)
 
 ```r
 # example usage with Spark DataFrame
@@ -151,8 +164,6 @@ sdf %>%
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% collect()
 #> `summarise()` has grouped output by "gender". You can override using the `.groups` argument.
 #> `summarise()` has grouped output by "gender". You can override using the `.groups` argument.
-#> [1] "gender" "age"   
-#> [1] "avg_pv_cnt"
 #> # A tibble: 17 × 3
 #>    gender age   avg_pv_cnt
 #>    <chr>  <chr>      <dbl>

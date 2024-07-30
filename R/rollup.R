@@ -15,6 +15,21 @@ setMethod("summarize", signature(object = "data.frame"), function(object, ...) {
 setMethod("summarize", signature(object = "grouped_df_list"), function(object, ...) {
   summarize_rollup(object@df_list, ...)
 })
+
+# Define generic `summarise` function
+setGeneric("summarise", function(object, ...) {
+  standardGeneric("summarise")
+})
+
+setMethod("summarise", signature(object = "data.frame"), function(object, ...) {
+  dplyr::summarize(object, ...)
+})
+
+# Define `summarize` method for `grouped_df_list`
+setMethod("summarise", signature(object = "grouped_df_list"), function(object, ...) {
+  summarize_rollup(object@df_list, ...)
+})
+
 #' Grouping Sets for R dataframe
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
