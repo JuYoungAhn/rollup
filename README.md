@@ -68,24 +68,24 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 # avg_pv_cnt group by ((gender, age, product_view_cnt_cat), product_view_cnt_cat)
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age, product_view_cnt_cat) %>% grouping_sets('product_view_cnt_cat', c('product_view_cnt_cat', 'gender','age')) %>% 
-  summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = product_view_cnt_cat, values_from = avg_pv_cnt)
+  summarize(avg_pv_cnt = mean(page_view_cnt), .groups = "drop") %>% pivot_wider(names_from = product_view_cnt_cat, values_from = avg_pv_cnt)
 #> `summarise()` has grouped output by 'product_view_cnt_cat', 'gender'. You can override using the `.groups` argument.
-#> # A tibble: 13 × 11
-#>    gender age       X `20%` `40%` `50%` `60%` `70%` `80%` `90%` `100%`
-#>    <chr>  <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
-#>  1 <NA>   <NA>  1.46  1.84   2.02 2.31   2.72  2.89  2.8   3.79   2.82
-#>  2 F      10    1.4   2      1.4  2.67   4    NA    NA     4     NA   
-#>  3 F      20    0     3.5    2.08 2.29   3.83  2.57  3.45  4.83   2.25
-#>  4 F      30    0.833 2.5    4.5  2.88   3     1.75  3.5   3      3.17
-#>  5 F      40    1.33  1.9    2.7  2.2    1.22  3     3.38  4      2   
-#>  6 F      50    0.462 1.5    2    2.5    1.2   4     2.5   5.33   3.5 
-#>  7 F      60    1.19  1.71   1    1.33   3     3     1.5   2      3   
-#>  8 M      10    0.375 0.833  1.14 3      1     0    NA    NA     NA   
-#>  9 M      20    1.14  3.17   3.16 3.55   4.5   3    NA     3.5    7   
-#> 10 M      30    0.824 1.62   1.31 2.7    3.38  2.5   1.86  3.5   NA   
-#> 11 M      40    0.889 0.933  2.06 0.833  1.88  3.25  1.6   1.67  NA   
-#> 12 M      50    0.562 1.07   1.06 2.6    2     0     0.5   0     NA   
-#> 13 M      60    3.06  2.69   4    3.5    0     8     2     1     NA
+#> # A tibble: 13 × 12
+#>    gender age   .groups     X `20%` `40%` `50%` `60%` `70%` `80%` `90%` `100%`
+#>    <chr>  <fct> <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+#>  1 <NA>   <NA>  drop    1.46  1.84   2.02 2.31   2.72  2.89  2.8   3.79   2.82
+#>  2 F      10    drop    1.4   2      1.4  2.67   4    NA    NA     4     NA   
+#>  3 F      20    drop    0     3.5    2.08 2.29   3.83  2.57  3.45  4.83   2.25
+#>  4 F      30    drop    0.833 2.5    4.5  2.88   3     1.75  3.5   3      3.17
+#>  5 F      40    drop    1.33  1.9    2.7  2.2    1.22  3     3.38  4      2   
+#>  6 F      50    drop    0.462 1.5    2    2.5    1.2   4     2.5   5.33   3.5 
+#>  7 F      60    drop    1.19  1.71   1    1.33   3     3     1.5   2      3   
+#>  8 M      10    drop    0.375 0.833  1.14 3      1     0    NA    NA     NA   
+#>  9 M      20    drop    1.14  3.17   3.16 3.55   4.5   3    NA     3.5    7   
+#> 10 M      30    drop    0.824 1.62   1.31 2.7    3.38  2.5   1.86  3.5   NA   
+#> 11 M      40    drop    0.889 0.933  2.06 0.833  1.88  3.25  1.6   1.67  NA   
+#> 12 M      50    drop    0.562 1.07   1.06 2.6    2     0     0.5   0     NA   
+#> 13 M      60    drop    3.06  2.69   4    3.5    0     8     2     1     NA
 ```
 
 ### with_cube
@@ -97,14 +97,14 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 ```r
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% with_cube() %>% 
-  summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
+  summarize(avg_pv_cnt = mean(page_view_cnt), .groups = "drop") %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 #> `summarise()` has grouped output by 'gender'. You can override using the `.groups` argument.
-#> # A tibble: 3 × 8
-#>   gender  `NA`  `10`  `20`  `30`  `40`  `50`  `60`
-#>   <chr>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1 F       2.28  2.33  2.86  2.67  2.33 2.24   1.48
-#> 2 M       1.92  0.92  3.19  1.91  1.31 0.907  2.99
-#> 3 <NA>    2.08  1.61  3.01  2.23  1.77 1.44   2.30
+#> # A tibble: 3 × 9
+#>   gender .groups  `NA`  `10`  `20`  `30`  `40`  `50`  `60`
+#>   <chr>  <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1 F      drop     2.28  2.33  2.86  2.67  2.33 2.24   1.48
+#> 2 M      drop     1.92  0.92  3.19  1.91  1.31 0.907  2.99
+#> 3 <NA>   drop     2.08  1.61  3.01  2.23  1.77 1.44   2.30
 
 # with_cube equals to grouping_sets with all possible combinations
 # web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
@@ -121,20 +121,20 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 ```r
 web_service_data %>% 
   group_by(date_id) %>% with_rollup() %>% 
-  summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
-#> # A tibble: 31 × 2
-#>    date_id    user_cnt
-#>    <chr>         <int>
-#>  1 2024-06-01      644
-#>  2 2024-06-02      615
-#>  3 2024-06-03      700
-#>  4 2024-06-04      710
-#>  5 2024-06-05      706
-#>  6 2024-06-06      637
-#>  7 2024-06-07      694
-#>  8 2024-06-08      642
-#>  9 2024-06-09      622
-#> 10 2024-06-10      706
+  summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)), .groups = "drop")
+#> # A tibble: 31 × 3
+#>    date_id    user_cnt .groups
+#>    <chr>         <int> <chr>  
+#>  1 2024-06-01      644 drop   
+#>  2 2024-06-02      615 drop   
+#>  3 2024-06-03      700 drop   
+#>  4 2024-06-04      710 drop   
+#>  5 2024-06-05      706 drop   
+#>  6 2024-06-06      637 drop   
+#>  7 2024-06-07      694 drop   
+#>  8 2024-06-08      642 drop   
+#>  9 2024-06-09      622 drop   
+#> 10 2024-06-10      706 drop   
 #> # ℹ 21 more rows
 
 # with_rollup equals to grouping_sets with all possible combinations in descending order
@@ -159,27 +159,12 @@ sdf <- copy_to(sc, web_service_data, "web_service_data", overwrite = TRUE)
 sdf %>%
   group_by(gender, age) %>%
   with_rollup() %>%
-  summarize(avg_pv_cnt = mean(page_view_cnt)) %>% collect()
+  summarize(avg_pv_cnt = mean(page_view_cnt), .groups = "drop") %>% collect()
 #> `summarise()` has grouped output by "gender". You can override using the `.groups` argument.
 #> `summarise()` has grouped output by "gender". You can override using the `.groups` argument.
-#> # A tibble: 17 × 3
-#>    gender age   avg_pv_cnt
-#>    <chr>  <chr>      <dbl>
-#>  1 M      40          2.32
-#>  2 M      20          3.52
-#>  3 F      20          3.83
-#>  4 M      60          2.80
-#>  5 M      30          4.16
-#>  6 N      10          1.41
-#>  7 F      30          3.23
-#>  8 F      10          2.59
-#>  9 F      50          2.79
-#> 10 F      40          2.76
-#> 11 M      50          1.46
-#> 12 M      10          1.12
-#> 13 F      60          1.75
-#> 14 N      <NA>        1.41
-#> 15 M      <NA>        2.65
-#> 16 F      <NA>        2.80
-#> 17 <NA>   <NA>        2.61
+#> Error:
+#> ! java.lang.StringIndexOutOfBoundsException: String index out of range: -1
+#> 
+#> Run ]8;;ide:run:sparklyr::spark_last_error()`sparklyr::spark_last_error()`]8;; to see the full Spark error (multiple lines)
+#> To use the previous style of error message set `options("sparklyr.simple.errors" = TRUE)`
 ```
