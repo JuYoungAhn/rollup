@@ -17,7 +17,7 @@ devtools::install_github("JuYoungAhn/rollup")
 ```
 
 ## Usage
-
+### Sample data
 ```{r setup}
 library(rollup)
 data("web_service_data")
@@ -28,7 +28,7 @@ web_service_data %>% head
 
 -   group by multiple columns in one line
 
-```{r}
+```{r warning=FALSE}
 # avg_pv_cnt group by (gender, age, (gender, age))
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age')) %>% 
@@ -45,7 +45,7 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 -   with_cube add all possible combinations of grouping variables
 -   easily add row sum and column sum in cross table
 
-```{r}
+```{r warning=FALSE}
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% with_cube() %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
@@ -61,7 +61,7 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 -   easily add all possible combinations of grouping variables in descending order
 -   calculate group sum and total sum (DAU and MAU in this example)
 
-```{r}
+```{r warning=FALSE}
 web_service_data %>% 
   group_by(date_id) %>% with_rollup() %>% 
   summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
@@ -76,7 +76,7 @@ web_service_data %>%
 
 -   All functions are also available in sparklyr (spark dataframe)
 
-```{r}
+```{r warning=FALSE}
 # example usage with Spark DataFrame
 library(sparklyr)
 sc <- spark_connect(master = "local")

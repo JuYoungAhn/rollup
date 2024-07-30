@@ -13,7 +13,7 @@ devtools::install_github("JuYoungAhn/rollup")
 ```
 
 ## Usage
-
+### Sample data
 
 ```r
 library(rollup)
