@@ -5,12 +5,10 @@ Grouping Sets, With Rollup and With Cube implementation for R dataframe
 
 ## Install
 
-```r
-library(devtools)
-devtools::install_github("JuYoungAhn/rollup")
+```
 #> Downloading GitHub repo JuYoungAhn/rollup@HEAD
 #> ── R CMD build ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#>      checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a64767aac/JuYoungAhn-rollup-6672dfc/DESCRIPTION’ ...  ✔  checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a64767aac/JuYoungAhn-rollup-6672dfc/DESCRIPTION’ (369ms)
+#>      checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a9934430/JuYoungAhn-rollup-771e27d/DESCRIPTION’ ...  ✔  checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a9934430/JuYoungAhn-rollup-771e27d/DESCRIPTION’ (362ms)
 #>   ─  preparing ‘rollup’:
 #>    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
 #>   ─  checking for LF line-endings in source and make files and shell scripts
@@ -20,7 +18,7 @@ devtools::install_github("JuYoungAhn/rollup")
 #> 
 #> '/home/dan-ahn/R/x86_64-pc-linux-gnu-library/4.3'의 위치에 패키지(들)을 설치합니다.
 #> (왜냐하면 'lib'가 지정되지 않았기 때문입니다)
-#> Warning in i.p(...): 패키지 '/tmp/Rtmpeo2bTw/file1c646a67562b02/rollup_0.0.0.tar.gz'의 설치가 0이 아닌 종료상태를 가졌습니다
+#> Warning in i.p(...): 패키지 '/tmp/Rtmpeo2bTw/file1c646a5848208a/rollup_0.0.0.tar.gz'의 설치가 0이 아닌 종료상태를 가졌습니다
 ```
 
 ## Usage

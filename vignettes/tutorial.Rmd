@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
 Grouping Sets, With Rollup and With Cube implementation for R dataframe
 
 ## Install
-```{r}
+```{r echo=FALSE}
 library(devtools)
 devtools::install_github("JuYoungAhn/rollup")
 ```
