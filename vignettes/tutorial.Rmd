@@ -11,8 +11,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-# library(knitr)
-# knit("vignettes/tutorial.Rmd", "../rollup/README.md")
 ```
 ## rollup Tutorial
 
