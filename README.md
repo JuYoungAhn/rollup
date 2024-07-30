@@ -1,11 +1,4 @@
----
-title: "tutorial"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{tutorial}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+
 
 ## rollup Tutorial
 
