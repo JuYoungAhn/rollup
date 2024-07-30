@@ -1,27 +1,19 @@
 
 
 # rollup
+
 Grouping Sets, With Rollup and With Cube implementation for R dataframe
 
 ## Install
 
-```
-#> Downloading GitHub repo JuYoungAhn/rollup@HEAD
-#> ── R CMD build ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-#>      checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a9934430/JuYoungAhn-rollup-771e27d/DESCRIPTION’ ...  ✔  checking for file ‘/tmp/Rtmpeo2bTw/remotes1c646a9934430/JuYoungAhn-rollup-771e27d/DESCRIPTION’ (362ms)
-#>   ─  preparing ‘rollup’:
-#>    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
-#>   ─  checking for LF line-endings in source and make files and shell scripts
-#>   ─  checking for empty or unneeded directories
-#>   ─  building ‘rollup_0.0.0.tar.gz’
-#>      
-#> 
-#> '/home/dan-ahn/R/x86_64-pc-linux-gnu-library/4.3'의 위치에 패키지(들)을 설치합니다.
-#> (왜냐하면 'lib'가 지정되지 않았기 때문입니다)
-#> Warning in i.p(...): 패키지 '/tmp/Rtmpeo2bTw/file1c646a5848208a/rollup_0.0.0.tar.gz'의 설치가 0이 아닌 종료상태를 가졌습니다
+
+```r
+library(devtools)
+devtools::install_github("JuYoungAhn/rollup")
 ```
 
 ## Usage
+
 
 ```r
 library(rollup)
@@ -39,7 +31,8 @@ web_service_data %>% head
 ```
 
 ### grouping_sets
-- group by multiple columns in one line
+
+-   group by multiple columns in one line
 
 
 ```r
@@ -94,9 +87,12 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 #> 12 M      50    0.562 1.07   1.06 2.6    2     0     0.5   0     NA   
 #> 13 M      60    3.06  2.69   4    3.5    0     8     2     1     NA
 ```
+
 ### with_cube
-- with_cube add all possible combinations of grouping variables
-- easily add row sum and column sum in cross table
+
+-   with_cube add all possible combinations of grouping variables
+-   easily add row sum and column sum in cross table
+
 
 ```r
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
@@ -115,9 +111,12 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 #   group_by(gender, age) %>% grouping_sets("gender","age",c("gender","age"), NA) %>% 
 #   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 ```
+
 ### with_rollup
-- easily add all possible combinations of grouping variables in descending order
-- calculate group sum and total sum (DAU and MAU in this example)
+
+-   easily add all possible combinations of grouping variables in descending order
+-   calculate group sum and total sum (DAU and MAU in this example)
+
 
 ```r
 web_service_data %>% 
@@ -144,9 +143,10 @@ web_service_data %>%
 #   summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
 ```
 
-
 ### sparklyr
-- All functions are also available in sparklyr (spark dataframe)
+
+-   All functions are also available in sparklyr (spark dataframe)
+
 
 ```r
 # example usage with Spark DataFrame

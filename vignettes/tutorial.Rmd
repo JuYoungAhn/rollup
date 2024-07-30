@@ -6,15 +6,18 @@ knitr::opts_chunk$set(
 ```
 
 # rollup
+
 Grouping Sets, With Rollup and With Cube implementation for R dataframe
 
 ## Install
-```{r echo=FALSE}
+
+```{r echo=TRUE, results='hide', warning=FALSE, message=FALSE}
 library(devtools)
 devtools::install_github("JuYoungAhn/rollup")
 ```
 
 ## Usage
+
 ```{r setup}
 library(rollup)
 data("web_service_data")
@@ -22,7 +25,8 @@ web_service_data %>% head
 ```
 
 ### grouping_sets
-- group by multiple columns in one line
+
+-   group by multiple columns in one line
 
 ```{r}
 # avg_pv_cnt group by (gender, age, (gender, age))
@@ -35,9 +39,12 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
   group_by(gender, age, product_view_cnt_cat) %>% grouping_sets('product_view_cnt_cat', c('product_view_cnt_cat', 'gender','age')) %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = product_view_cnt_cat, values_from = avg_pv_cnt)
 ```
+
 ### with_cube
-- with_cube add all possible combinations of grouping variables
-- easily add row sum and column sum in cross table
+
+-   with_cube add all possible combinations of grouping variables
+-   easily add row sum and column sum in cross table
+
 ```{r}
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% with_cube() %>% 
@@ -48,9 +55,12 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 #   group_by(gender, age) %>% grouping_sets("gender","age",c("gender","age"), NA) %>% 
 #   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 ```
+
 ### with_rollup
-- easily add all possible combinations of grouping variables in descending order
-- calculate group sum and total sum (DAU and MAU in this example)
+
+-   easily add all possible combinations of grouping variables in descending order
+-   calculate group sum and total sum (DAU and MAU in this example)
+
 ```{r}
 web_service_data %>% 
   group_by(date_id) %>% with_rollup() %>% 
@@ -62,9 +72,10 @@ web_service_data %>%
 #   summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
 ```
 
-
 ### sparklyr
-- All functions are also available in sparklyr (spark dataframe)
+
+-   All functions are also available in sparklyr (spark dataframe)
+
 ```{r}
 # example usage with Spark DataFrame
 library(sparklyr)
