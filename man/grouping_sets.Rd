@@ -18,7 +18,7 @@ list of dataframes grouped by grouping variables
 Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 }
 \examples{
-mtcars \%>\% group_by(vs, am) \%>\% grouping_sets("vs","am",c("vs","am")) \%>\% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-mtcars \%>\% group_by(vs, am) \%>\% with_rollup() \%>\% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-mtcars \%>\% group_by(vs, am) \%>\% with_cube() \%>\% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp)) 
+mtcars \%>\% group_by(vs, am) \%>\% grouping_sets("vs","am",c("vs","am")) 
+mtcars \%>\% group_by(vs, am) \%>\% with_rollup() 
+mtcars \%>\% group_by(vs, am) \%>\% with_cube() 
 }

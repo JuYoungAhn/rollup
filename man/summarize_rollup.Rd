@@ -7,16 +7,13 @@
 summarize_rollup(df_list, ...)
 }
 \arguments{
-\item{grouped_df_list}{}
+\item{df_list}{list of 'grouped_df' class}
 
-\item{functions}{for 'summarize'}
+\item{...}{functions for 'summarize'}
 }
 \value{
 summarized dataframe
 }
 \description{
-Summarize returns of Grouping Sets
-}
-\examples{
-mtcars \%>\% group_by(vs, am) \%>\% grouping_sets("vs","am",c("vs","am")) \%>\% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
+S4 method of 'summarize' for class 'grouped_df_list'
 }

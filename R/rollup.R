@@ -1,34 +1,67 @@
 library(dplyr)
 
+#' grouped_df_list class definition
+#' 
+#' A class to represent a list of grouped data frames.
+#' 
+#' @export
 setClass("grouped_df_list", representation(df_list = "list"))
 
-# Define generic `summarize` function
+#' Generic `summarize` function
+#' 
+#' @param object Object to be summarized.
+#' @param ... Additional arguments.
+#' @export
 setGeneric("summarize", function(object, ...) {
   standardGeneric("summarize")
 })
 
+#' Method for `summarize` on data.frame
+#' 
+#' @param object A data.frame object.
+#' @param ... Additional arguments.
+#' @export
 setMethod("summarize", signature(object = "data.frame"), function(object, ...) {
   dplyr::summarize(object, ...)
 })
 
-# Define `summarize` method for `grouped_df_list`
+#' Method for `summarize` on grouped_df_list
+#' 
+#' @param object A grouped_df_list object.
+#' @param ... Additional arguments.
+#' @export
 setMethod("summarize", signature(object = "grouped_df_list"), function(object, ...) {
   summarize_rollup(object@df_list, ...)
 })
 
-# Define generic `summarise` function
+#' Generic `summarise` function
+#' 
+#' @param object Object to be summarized.
+#' @param ... Additional arguments.
+#' @export
 setGeneric("summarise", function(object, ...) {
   standardGeneric("summarise")
 })
 
+#' Method for `summarise` on data.frame
+#' 
+#' @param object A data.frame object.
+#' @param ... Additional arguments.
+#' @export
 setMethod("summarise", signature(object = "data.frame"), function(object, ...) {
-  dplyr::summarize(object, ...)
+  dplyr::summarise(object, ...)
 })
 
-# Define `summarize` method for `grouped_df_list`
+#' Method for `summarise` on grouped_df_list
+#' 
+#' @param object A grouped_df_list object.
+#' @param ... Additional arguments.
+#' @export
 setMethod("summarise", signature(object = "grouped_df_list"), function(object, ...) {
   summarize_rollup(object@df_list, ...)
 })
+
+
 
 #' Grouping Sets for R dataframe
 #'
@@ -39,9 +72,9 @@ setMethod("summarise", signature(object = "grouped_df_list"), function(object, .
 #' @param ... grouping variables 
 #' @return list of dataframes grouped by grouping variables
 #' @examples
-#' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-#' mtcars %>% group_by(vs, am) %>% with_rollup() %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-#' mtcars %>% group_by(vs, am) %>% with_cube() %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp)) 
+#' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) 
+#' mtcars %>% group_by(vs, am) %>% with_rollup() 
+#' mtcars %>% group_by(vs, am) %>% with_cube() 
 #' @export 
 grouping_sets <- function(df, ...) {
   var_list <- list(...)
@@ -63,13 +96,13 @@ grouping_sets <- function(df, ...) {
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 #'
-#' @param grouped_df 
+#' @param grouped_df 'grouped_df' class
 #'
 #' @return list of dataframes
 #' @examples
-#' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-#' mtcars %>% group_by(vs, am) %>% with_rollup() %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-#' mtcars %>% group_by(vs, am) %>% with_cube() %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp)) 
+#' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am"))
+#' mtcars %>% group_by(vs, am) %>% with_rollup() 
+#' mtcars %>% group_by(vs, am) %>% with_cube() 
 #' @export 
 with_cube <- function(grouped_df) {
   grouping_vars <- grouped_df %>% group_vars()
@@ -82,13 +115,13 @@ with_cube <- function(grouped_df) {
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 #'
-#' @param grouped_df 
-#'
+#' @param grouped_df 'grouped_df' class
+#' 
 #' @return list of dataframes
 #' @examples
-#' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-#' mtcars %>% group_by(vs, am) %>% with_rollup() %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp))
-#' mtcars %>% group_by(vs, am) %>% with_cube() %>% summarize(avg_mpg = mean(mpg), avg_disp = mean(disp)) 
+#' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) 
+#' mtcars %>% group_by(vs, am) %>% with_rollup()
+#' mtcars %>% group_by(vs, am) %>% with_cube() 
 #' @export
 with_rollup <- function(grouped_df) {
   grouping_vars <- grouped_df %>% group_vars()
@@ -106,8 +139,8 @@ with_rollup <- function(grouped_df) {
 #'
 #' S4 method of 'summarize' for class 'grouped_df_list'
 #'
-#' @param grouped_df_list list of 'grouped_df' class
-#' @param functions for 'summarize'
+#' @param df_list list of 'grouped_df' class
+#' @param ... functions for 'summarize'
 #'
 #' @return summarized dataframe
 #' @export 
@@ -129,9 +162,9 @@ summarize_rollup <- function(df_list, ...) {
 
   cols <- colnames(binded_result)
   exclude_common_cols <- cols[!cols %in% common_cols]
-  binded_result <- binded_result %>% select(exclude_common_cols, common_cols)
+  binded_result <- binded_result %>% select(all_of(c(exclude_common_cols, common_cols)))
   return(binded_result)
 } 
 
-help(grouping_sets)
+
 

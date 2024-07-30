@@ -1,3 +1,14 @@
+---
+title: "rollup"
+author: "Ju Young Ahn"
+date: "2024-07-30"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rollup}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -9,16 +20,10 @@ knitr::opts_chunk$set(
 
 Grouping Sets, With Rollup and With Cube implementation for R dataframe
 
-## Install
-
-```{r echo=TRUE, results='hide', warning=FALSE, message=FALSE}
-library(devtools)
-devtools::install_github("JuYoungAhn/rollup")
-```
-
 ## Usage
 ### Sample data
 ```{r setup}
+library(dplyr)
 library(rollup)
 data("web_service_data")
 web_service_data %>% head
@@ -75,16 +80,3 @@ web_service_data %>%
 ### sparklyr
 
 -   All functions are also available in sparklyr (spark dataframe)
-
-```{r warning=FALSE}
-# example usage with Spark DataFrame
-library(sparklyr)
-sc <- spark_connect(master = "local")
-sdf <- copy_to(sc, web_service_data, "web_service_data", overwrite = TRUE)
-
-# grouping_sets on spark dataframe
-sdf %>%
-  group_by(gender, age) %>%
-  with_rollup() %>%
-  summarize(avg_pv_cnt = mean(page_view_cnt)) %>% collect()
-```
