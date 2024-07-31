@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 # rollup
 
-Grouping Sets, With Rollup and With Cube implementation for R dataframe
+`rollup`: An R implementation of GROUPING SETS, WITH ROLLUP, and WITH CUBE, which are powerful extensions of the GROUP BY clause that compute multiple group-by clauses in a single statement in SQL. This package operates on top of the `tidyverse` and performs the same functions as SQL.
 
 ## Usage
 ### Sample data
@@ -31,9 +31,10 @@ web_service_data %>% head
 
 ### grouping_sets
 
--   group by multiple columns in one line
-
+- `grouping_sets(a)` is equivalent to the single grouping set operation `group_by(a)`.
+- `grouping_sets(a,b)` is equivalent to row bind of `group_by(a)` and `group_by(b)`.
 ```{r warning=FALSE}
+library(tidyr)
 # avg_pv_cnt group by (gender, age, (gender, age))
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age')) %>% 
@@ -47,24 +48,27 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 
 ### with_cube
 
--   with_cube add all possible combinations of grouping variables
--   easily add row sum and column sum in cross table
+- `with_cube()` adds all possible combinations of grouping variables
+- `with_cube()` easily adds row sum and column sum in a cross table
+- `group_by(a,b,c)` followed by `with_cube()` equals to `grouping_sets((a,b,c), (a,b), (a,c), (b,c), a, b, c, NA)`.
 
 ```{r warning=FALSE}
+# add sub-total rows to 2x2 cross table using with_cube()
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% with_cube() %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 
 # with_cube equals to grouping_sets with all possible combinations
-# web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
-#   group_by(gender, age) %>% grouping_sets("gender","age",c("gender","age"), NA) %>% 
-#   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
+web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
+  group_by(gender, age) %>% grouping_sets("gender","age",c("gender","age"), NA) %>%
+  summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 ```
 
 ### with_rollup
 
--   easily add all possible combinations of grouping variables in descending order
--   calculate group sum and total sum (DAU and MAU in this example)
+- `with_rollup()` is an extension of the `group_by` clause that produces sub-total rows alongside grouped rows. 
+- `group_by(a,b)` followed by `with_rollup()` equals to `grouping_sets((a,b), a, NA)`.
+- `group_by(a,b,c)` followed by `with_rollup()` equals to `grouping_sets((a,b,c), (a,b), (a), NA)`.
 
 ```{r warning=FALSE}
 web_service_data %>% 
@@ -72,11 +76,11 @@ web_service_data %>%
   summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
 
 # with_rollup equals to grouping_sets with all possible combinations in descending order
-# web_service_data %>%
-#   group_by(date_id) %>% grouping_sets("date_id", NA) %>%
-#   summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
+web_service_data %>%
+  group_by(date_id) %>% grouping_sets("date_id", NA) %>%
+  summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
 ```
 
 ### sparklyr
 
--   All functions are also available in sparklyr (spark dataframe)
+- All functions are also available for sparklyr (spark dataframe)

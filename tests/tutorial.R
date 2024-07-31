@@ -12,10 +12,6 @@ web_service_data %>% filter(date_id == '2024-06-30') %>%
 web_service_data %>% filter(date_id == '2024-06-30') %>% 
   group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age'))
 
-a <- web_service_data %>% filter(date_id == '2024-06-30') %>% 
-  group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age')) 
-class(a)
-
 # avg_pv_cnt group by ((gender, age, product_view_cnt_cat), product_view_cnt_cat)
 web_service_data %>% filter(date_id == '2024-06-30') %>% 
   group_by(gender, age, product_view_cnt_cat) %>% grouping_sets('product_view_cnt_cat', c('product_view_cnt_cat', 'gender', 'age')) %>% 

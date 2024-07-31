@@ -4,7 +4,7 @@ Version: 0.0.0
 Authors@R: 
    person("Ju Young", "Ahn", , "juyoung.ahn@snu.ac.kr", role = c("aut", "cre"), 
           comment = c(ORCID = "-"))
-Description: What the package does (one paragraph).
+Description: An R implementation of GROUPING SETS, WITH ROLLUP, and WITH CUBE, which are powerful extensions of the GROUP BY clause that compute multiple group-by clauses in a single statement in SQL.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -20,8 +20,6 @@ Suggests:
 VignetteBuilder: knitr
 Imports: 
   rlang, 
-  dplyr,
   methods,
   utils,
-  magrittr,
-  tidyr
+  magrittr

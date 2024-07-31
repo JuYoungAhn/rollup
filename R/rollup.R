@@ -1,4 +1,3 @@
-library(dplyr)
 
 #' grouped_df_list class definition
 #' 
@@ -67,6 +66,11 @@ setMethod("summarise", signature(object = "grouped_df_list"), function(object, .
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr ungroup select all_of vars
+#' @importFrom methods new
+#' @importFrom utils combn
+#' @import tidyr
 #' @usage grouping_sets(df, ...)
 #' @param df dataframe or grouped df
 #' @param ... grouping variables 
