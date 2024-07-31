@@ -15,14 +15,15 @@ setGeneric("summarize", function(object, ...) {
   standardGeneric("summarize")
 })
 
-#' Method for `summarize` on data.frame
-#' 
-#' @param object A data.frame object.
+#' Default method for `summarize`
+#'
+#' @param object An object.
 #' @param ... Additional arguments.
 #' @export
-setMethod("summarize", signature(object = "data.frame"), function(object, ...) {
+setMethod("summarize", "ANY", function(object, ...) {
   dplyr::summarize(object, ...)
 })
+
 
 #' Method for `summarize` on grouped_df_list
 #' 
@@ -42,12 +43,12 @@ setGeneric("summarise", function(object, ...) {
   standardGeneric("summarise")
 })
 
-#' Method for `summarise` on data.frame
+#' Default method for `summarise`
 #' 
-#' @param object A data.frame object.
+#' @param object An object
 #' @param ... Additional arguments.
 #' @export
-setMethod("summarise", signature(object = "data.frame"), function(object, ...) {
+setMethod("summarise", "ANY", function(object, ...) {
   dplyr::summarise(object, ...)
 })
 
@@ -60,17 +61,15 @@ setMethod("summarise", signature(object = "grouped_df_list"), function(object, .
   summarize_rollup(object@df_list, ...)
 })
 
-
-
 #' Grouping Sets for R dataframe
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr ungroup select all_of vars
 #' @importFrom methods new
 #' @importFrom utils combn
 #' @import tidyr
+#' @import dplyr
 #' @usage grouping_sets(df, ...)
 #' @param df dataframe or grouped df
 #' @param ... grouping variables 
@@ -100,6 +99,7 @@ grouping_sets <- function(df, ...) {
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 #'
+#' @import dplyr
 #' @param grouped_df 'grouped_df' class
 #'
 #' @return list of dataframes
@@ -109,7 +109,7 @@ grouping_sets <- function(df, ...) {
 #' mtcars %>% group_by(vs, am) %>% with_cube() 
 #' @export 
 with_cube <- function(grouped_df) {
-  grouping_vars <- grouped_df %>% group_vars()
+  grouping_vars <- grouped_df %>% dplyr::group_vars()
   combinations <- unlist(lapply(seq_along(grouping_vars), function(x) combn(grouping_vars, x, simplify = FALSE)), recursive = FALSE)
   grouped_var_list <- c(combinations, NA)
   do.call(grouping_sets, c(list(grouped_df), grouped_var_list))
@@ -119,8 +119,8 @@ with_cube <- function(grouped_df) {
 #'
 #' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
 #'
+#' @import dplyr
 #' @param grouped_df 'grouped_df' class
-#' 
 #' @return list of dataframes
 #' @examples
 #' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) 
@@ -128,7 +128,7 @@ with_cube <- function(grouped_df) {
 #' mtcars %>% group_by(vs, am) %>% with_cube() 
 #' @export
 with_rollup <- function(grouped_df) {
-  grouping_vars <- grouped_df %>% group_vars()
+  grouping_vars <- grouped_df %>% dplyr::group_vars()
   grouped_var_list <- list()
   
   for (i in seq_along(grouping_vars)) {
@@ -139,10 +139,13 @@ with_rollup <- function(grouped_df) {
   do.call(grouping_sets, c(list(grouped_df), grouped_var_list))
 } 
 
-#' Summarize returns of Grouping Sets
+#' Summarize returns of grouping_sets
 #'
 #' S4 method of 'summarize' for class 'grouped_df_list'
 #'
+#' @import dplyr
+#' @importFrom rlang quos
+#' @importFrom sparklyr sdf_bind_rows
 #' @param df_list list of 'grouped_df' class
 #' @param ... functions for 'summarize'
 #'
@@ -157,9 +160,14 @@ summarize_rollup <- function(df_list, ...) {
   
   common_cols <- Reduce(intersect, lapply(result_tmp, colnames))
   
-  if(inherits(df_list[[1]], "tbl_spark")) {
-    binded_result <- sdf_bind_rows(result_tmp)
-  }
+  if(inherits(df_list[[1]], "tbl_spark")) {  
+    if(requireNamespace("sparklyr", quietly = TRUE)) {
+      binded_result <- sparklyr::sdf_bind_rows(result_tmp)  
+    }
+    else {
+      stop("sparklyr package is required for operating on Spark DataFrames.")
+    }
+  }  
   else {
     binded_result <- dplyr::bind_rows(result_tmp)
   }

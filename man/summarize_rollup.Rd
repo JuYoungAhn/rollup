@@ -2,7 +2,7 @@
 % Please edit documentation in R/rollup.R
 \name{summarize_rollup}
 \alias{summarize_rollup}
-\title{Summarize returns of Grouping Sets}
+\title{Summarize returns of grouping_sets}
 \usage{
 summarize_rollup(df_list, ...)
 }
