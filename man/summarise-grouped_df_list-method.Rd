@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments.}
 }
+\value{
+An object of the same class as \code{.data.} One grouping level will be dropped.
+}
 \description{
 Method for \code{summarise} on grouped_df_list
 }

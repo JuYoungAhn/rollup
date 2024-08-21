@@ -1,10 +1,10 @@
 Package: rollup
-Title: Grouping Sets, Rollup and Cube for R
+Title: A Tidy Grouping Sets, Rollup and Cube
 Version: 0.0.0
 Authors@R: 
    person("Ju Young", "Ahn", , "juyoung.ahn@snu.ac.kr", role = c("aut", "cre"), 
           comment = c(ORCID = "0009-0008-4613-3438"))
-Description: An R implementation of grouping sets, rollup and cube, which are powerful extensions of the group-by clause that compute multiple group-by clauses in a single statement in SQL.
+Description: A Tidy implementation of 'grouping sets', 'rollup' and 'cube', which are extensions of the 'group_by' clause that compute multiple 'group_by' clauses in a single statement. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

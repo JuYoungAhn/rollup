@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments.}
 }
+\value{
+An object of the same class as \code{.data}. One grouping level will be dropped.
+}
 \description{
 Default method for \code{summarise}
 }

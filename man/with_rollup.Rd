@@ -2,7 +2,7 @@
 % Please edit documentation in R/rollup.R
 \name{with_rollup}
 \alias{with_rollup}
-\title{With Rollup for R dataframes}
+\title{with_rollup}
 \usage{
 with_rollup(grouped_df)
 }
@@ -10,10 +10,10 @@ with_rollup(grouped_df)
 \item{grouped_df}{'grouped_df' class}
 }
 \value{
-list of dataframes
+A list of 'grouped_df' class. each 'grouped_df' object has a different grouping level.
 }
 \description{
-Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
+Compute total amounts at different group levels, producing multiple subtotals. With the 'with_rollup' clause following 'group_by', you can aggregate multiple grouping variables in one operation. This reflects the 'WITH ROLLUP' operations in 'SQL'.
 }
 \examples{
 mtcars \%>\% group_by(vs, am) \%>\% grouping_sets("vs","am",c("vs","am")) 

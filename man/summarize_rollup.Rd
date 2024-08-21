@@ -2,18 +2,18 @@
 % Please edit documentation in R/rollup.R
 \name{summarize_rollup}
 \alias{summarize_rollup}
-\title{Summarize returns of grouping_sets}
+\title{summarize_rollup}
 \usage{
 summarize_rollup(df_list, ...)
 }
 \arguments{
-\item{df_list}{list of 'grouped_df' class}
+\item{df_list}{'grouped_df_list' class}
 
 \item{...}{functions for 'summarize'}
 }
 \value{
-summarized dataframe
+An object of the same class as \code{.data}. The unioned aggregated result of multiple grouping levels will be dropped.
 }
 \description{
-S4 method of 'summarize' for class 'grouped_df_list'
+'summarize_rollup' aggregates each 'grouped_df' in the 'grouped_df_list' class and return the unioned aggregated results.
 }

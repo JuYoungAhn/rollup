@@ -10,6 +10,7 @@ setClass("grouped_df_list", representation(df_list = "list"))
 #' 
 #' @param object Object to be summarized.
 #' @param ... Additional arguments.
+#' @return An object of the same class as `.data`. One grouping level will be dropped.
 #' @export
 setGeneric("summarize", function(object, ...) {
   standardGeneric("summarize")
@@ -19,6 +20,7 @@ setGeneric("summarize", function(object, ...) {
 #'
 #' @param object An object.
 #' @param ... Additional arguments.
+#' @return An object of the same class as `.data`. One grouping level will be dropped.
 #' @export
 setMethod("summarize", "ANY", function(object, ...) {
   dplyr::summarize(object, ...)
@@ -29,6 +31,7 @@ setMethod("summarize", "ANY", function(object, ...) {
 #' 
 #' @param object A grouped_df_list object.
 #' @param ... Additional arguments.
+#' @return An object of the same class as `.data`. One grouping level will be dropped.
 #' @export
 setMethod("summarize", signature(object = "grouped_df_list"), function(object, ...) {
   summarize_rollup(object@df_list, ...)
@@ -38,6 +41,7 @@ setMethod("summarize", signature(object = "grouped_df_list"), function(object, .
 #' 
 #' @param object Object to be summarized.
 #' @param ... Additional arguments.
+#' @return An object of the same class as `.data`. One grouping level will be dropped.
 #' @export
 setGeneric("summarise", function(object, ...) {
   standardGeneric("summarise")
@@ -47,6 +51,7 @@ setGeneric("summarise", function(object, ...) {
 #' 
 #' @param object An object
 #' @param ... Additional arguments.
+#' @return An object of the same class as `.data`. One grouping level will be dropped.
 #' @export
 setMethod("summarise", "ANY", function(object, ...) {
   dplyr::summarise(object, ...)
@@ -56,14 +61,15 @@ setMethod("summarise", "ANY", function(object, ...) {
 #' 
 #' @param object A grouped_df_list object.
 #' @param ... Additional arguments.
+#' @return An object of the same class as `.data.` One grouping level will be dropped.
 #' @export
 setMethod("summarise", signature(object = "grouped_df_list"), function(object, ...) {
   summarize_rollup(object@df_list, ...)
 })
 
-#' Grouping Sets for R dataframe
+#' grouping_sets
 #'
-#' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
+#' Compute total amounts at different group levels, producing multiple subtotals. With the 'grouping_sets' clause following 'group_by', you can aggregate multiple grouping variables in one operation. This reflects the 'GROUPING SETS' operations in 'SQL'. 
 #'
 #' @importFrom magrittr %>%
 #' @importFrom methods new
@@ -73,7 +79,7 @@ setMethod("summarise", signature(object = "grouped_df_list"), function(object, .
 #' @usage grouping_sets(df, ...)
 #' @param df dataframe or grouped df
 #' @param ... grouping variables 
-#' @return list of dataframes grouped by grouping variables
+#' @return A list of 'grouped_df' class. each 'grouped_df' object has a different grouping level.
 #' @examples
 #' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) 
 #' mtcars %>% group_by(vs, am) %>% with_rollup() 
@@ -95,14 +101,14 @@ grouping_sets <- function(df, ...) {
 }
 
 
-#' With Cube for R dataframe
+#' with_cube
 #'
-#' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
+#' Compute total amounts at different group levels, producing multiple subtotals. With the 'with_cube' clause following 'group_by', you can aggregate multiple grouping variables in one operation. This reflects the 'WITH CUBE' operations in 'SQL'.
 #'
 #' @import dplyr
 #' @param grouped_df 'grouped_df' class
 #'
-#' @return list of dataframes
+#' @return A list of 'grouped_df' class. each 'grouped_df' object has a different grouping level.
 #' @examples
 #' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am"))
 #' mtcars %>% group_by(vs, am) %>% with_rollup() 
@@ -115,13 +121,13 @@ with_cube <- function(grouped_df) {
   do.call(grouping_sets, c(list(grouped_df), grouped_var_list))
 }
 
-#' With Rollup for R dataframes
+#' with_rollup
 #'
-#' Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
+#' Compute total amounts at different group levels, producing multiple subtotals. With the 'with_rollup' clause following 'group_by', you can aggregate multiple grouping variables in one operation. This reflects the 'WITH ROLLUP' operations in 'SQL'.
 #'
 #' @import dplyr
 #' @param grouped_df 'grouped_df' class
-#' @return list of dataframes
+#' @return A list of 'grouped_df' class. each 'grouped_df' object has a different grouping level.
 #' @examples
 #' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) 
 #' mtcars %>% group_by(vs, am) %>% with_rollup()
@@ -139,17 +145,17 @@ with_rollup <- function(grouped_df) {
   do.call(grouping_sets, c(list(grouped_df), grouped_var_list))
 } 
 
-#' Summarize returns of grouping_sets
+#' summarize_rollup
 #'
-#' S4 method of 'summarize' for class 'grouped_df_list'
+#' 'summarize_rollup' aggregates each 'grouped_df' in the 'grouped_df_list' class and return the unioned aggregated results.
 #'
 #' @import dplyr
 #' @importFrom rlang quos
 #' @importFrom sparklyr sdf_bind_rows
-#' @param df_list list of 'grouped_df' class
+#' @param df_list 'grouped_df_list' class
 #' @param ... functions for 'summarize'
 #'
-#' @return summarized dataframe
+#' @return An object of the same class as `.data`. The unioned aggregated result of multiple grouping levels will be dropped.
 #' @export 
 summarize_rollup <- function(df_list, ...) {  
   funcs <- rlang::quos(...)  

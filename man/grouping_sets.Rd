@@ -2,7 +2,7 @@
 % Please edit documentation in R/rollup.R
 \name{grouping_sets}
 \alias{grouping_sets}
-\title{Grouping Sets for R dataframe}
+\title{grouping_sets}
 \usage{
 grouping_sets(df, ...)
 }
@@ -12,10 +12,10 @@ grouping_sets(df, ...)
 \item{...}{grouping variables}
 }
 \value{
-list of dataframes grouped by grouping variables
+A list of 'grouped_df' class. each 'grouped_df' object has a different grouping level.
 }
 \description{
-Compute total amounts at different group levels, producing multiple subtotals. This mirrors the GROUPING SETS operations in SQL.
+Compute total amounts at different group levels, producing multiple subtotals. With the 'grouping_sets' clause following 'group_by', you can aggregate multiple grouping variables in one operation. This reflects the 'GROUPING SETS' operations in 'SQL'.
 }
 \examples{
 mtcars \%>\% group_by(vs, am) \%>\% grouping_sets("vs","am",c("vs","am")) 
