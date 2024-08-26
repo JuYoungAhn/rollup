@@ -12,8 +12,6 @@ name: pkgdown
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_PAT: ${{ secrets.GH_TOKEN }}
     steps:
       - uses: actions/checkout@v2
 
@@ -29,7 +27,9 @@ jobs:
           needs: website
 
       - name: Deploy package
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --local user.name "jy93630@naver.com"
-          git config --local user.email "JuYoungAhn"
+          git config --local user.name "JuYoungAhn"
+          git config --local user.email "jy93630@naver.com"
           Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
