@@ -1,10 +1,10 @@
 Package: rollup
-Title: A Tidy Grouping Sets, Rollup and Cube
-Version: 0.0.0
+Title: A Tidy Grouping Set Aggregation
+Version: 0.0.2
 Authors@R: 
    person("Ju Young", "Ahn", , "juyoung.ahn@snu.ac.kr", role = c("aut", "cre"), 
           comment = c(ORCID = "0009-0008-4613-3438"))
-Description: A Tidy implementation of 'grouping sets', 'rollup' and 'cube', which are extensions of the 'group_by' clause that compute multiple 'group_by' clauses in a single statement. 
+Description: A Tidy implementation of 'grouping sets', 'rollup' and 'cube' - extensions of the 'group_by' clause that allow for computing multiple 'group_by' clauses in a single statement. For more detailed information on these functions, please refer to "Enhanced Aggregation, Cube, Grouping and Rollup" <https://cwiki.apache.org/confluence/display/Hive/Enhanced+Aggregation%2C+Cube%2C+Grouping+and+Rollup>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

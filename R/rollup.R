@@ -130,7 +130,7 @@ with_cube <- function(grouped_df) {
 #' @return A list of 'grouped_df' class. each 'grouped_df' object has a different grouping level.
 #' @examples
 #' mtcars %>% group_by(vs, am) %>% grouping_sets("vs","am",c("vs","am")) 
-#' mtcars %>% group_by(vs, am) %>% with_rollup()
+#' mtcars %>% group_by(vs, am) %>% with_rollup() 
 #' mtcars %>% group_by(vs, am) %>% with_cube() 
 #' @export
 with_rollup <- function(grouped_df) {

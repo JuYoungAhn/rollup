@@ -17,6 +17,6 @@ Compute total amounts at different group levels, producing multiple subtotals. W
 }
 \examples{
 mtcars \%>\% group_by(vs, am) \%>\% grouping_sets("vs","am",c("vs","am")) 
-mtcars \%>\% group_by(vs, am) \%>\% with_rollup()
+mtcars \%>\% group_by(vs, am) \%>\% with_rollup() 
 mtcars \%>\% group_by(vs, am) \%>\% with_cube() 
 }
