@@ -1,0 +1,15 @@
+url: "https://juyoung.ahn.github.io/rollup"
+navbar:
+  type: default
+  home: ~
+  github: JuYoungAhn/rollup  # 깃허브 링크
+  right:
+    - text: "Github"
+      href: https://github.com/JuYoungAhn/<repo>
+      icon: fa-github
+
+template:
+  params:
+    bootswatch: "flatly"
+    bslib:
+      version: 4

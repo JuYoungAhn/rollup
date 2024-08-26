@@ -14,11 +14,13 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(rollup))
 ```
 
 # rollup
 
-`rollup`: A Tidy implementation of GROUPING SETS, WITH ROLLUP, and WITH CUBE, which are powerful extensions of the GROUP BY clause that compute multiple group-by clauses in a single statement in SQL. This package operates on top of the `dplyr` and performs the same functions as SQL.
+`rollup`: A Tidy implementation of `GROUPING SETS`, `WITH ROLLUP`, and `WITH CUBE`, which are powerful extensions of the `GROUP BY` clause that compute multiple group-by clauses in a single statement in `SQL`. This package operates on top of the `dplyr` and performs the same functions as `SQL`.
 
 ## Usage
 ### Sample data
