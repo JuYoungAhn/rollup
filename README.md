@@ -7,6 +7,10 @@
 ## Install
 
 ```r
-library(devtools)
+# From CRAN
+install.packages("rollup")
+
+# From Github
 devtools::install_github("JuYoungAhn/rollup")
 ```
+[![CRAN\_Download\_Badge](https://cranlogs.r-pkg.org/badges/rollup)](https://CRAN.R-project.org/package=rollup)
