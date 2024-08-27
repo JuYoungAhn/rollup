@@ -87,19 +87,27 @@
 
     
     
-<div class="section level2">
-<h2 id="rollup">rollup<a class="anchor" aria-label="anchor" href="#rollup"></a>
-</h2>
 <p><code>rollup</code>: A Tidy implementation of <code>GROUPING SETS</code>, <code>WITH ROLLUP</code>, and <code>WITH CUBE</code>, which are powerful extensions of the <code>GROUP BY</code> clause that compute multiple group-by clauses in a single statement in <code>SQL</code>. This package operates on top of the <code>dplyr</code> and performs the same functions as <code>SQL</code>.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># From CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rollup"</span><span class="op">)</span></span>
+<span> </span>
+<span><span class="co"># From Github</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"JuYoungAhn/rollup"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <div class="section level3">
-<h3 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h3 id="sample-data">Sample data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
 </h3>
-<div class="section level4">
-<h4 id="sample-data">Sample data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
-</h4>
-<div class="section level6">
-<h6 id="description-of-sample-data">Description of sample data<a class="anchor" aria-label="anchor" href="#description-of-sample-data"></a>
-</h6>
+<div class="section level5">
+<h5 id="description-of-sample-data">Description of sample data<a class="anchor" aria-label="anchor" href="#description-of-sample-data"></a>
+</h5>
 <ul>
 <li>date_id : yyyy-mm-dd</li>
 <li>id : user unique id</li>
@@ -108,7 +116,7 @@
 <li>page_view_cnt : pageview count of user on date_id</li>
 <li>producte_view_cnt : product view count of user on date_id</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://juyoungahn.github.io/rollup">rollup</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"web_service_data"</span><span class="op">)</span></span>
@@ -124,9 +132,9 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2024-06-24    86 F      40                3 90%</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level4">
-<h4 id="grouping_sets">grouping_sets<a class="anchor" aria-label="anchor" href="#grouping_sets"></a>
-</h4>
+<div class="section level3">
+<h3 id="grouping_sets">grouping_sets<a class="anchor" aria-label="anchor" href="#grouping_sets"></a>
+</h3>
 <ul>
 <li>
 <code>grouping_sets</code> is useful when multiple group-by operations are needed.</li>
@@ -135,9 +143,9 @@
 <li>
 <code>grouping_sets(a,b)</code> is equivalent to row binding of <code>group_by(a)</code> and <code>group_by(b)</code>.</li>
 <li>
-<code>grouping_sets((a,b),a,b, NA)</code> is equivalent to row binding of <code>group_by(a,b)</code>, <code>group_by(a)</code>, <code>group_by(b)</code> and without implementing the <code>group_by</code> operation.</li>
+<code>grouping_sets((a,b),a,b, NA)</code> is equivalent to row binding of <code>group_by(a,b)</code>, <code>group_by(a)</code>, <code>group_by(b)</code> and without <code>group_by</code> operation.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="co"># compute average of `page_view_cnt` group by "gender", "age", and "gender &amp; age", along with the overall average.</span></span>
 <span><span class="va">web_service_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date_id</span> <span class="op">==</span> <span class="st">'2024-06-30'</span> <span class="op">&amp;</span> <span class="va">gender</span> <span class="op">!=</span> <span class="st">"N"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -179,9 +187,9 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> M      50    0.562 1.07   1.06 2.6    2     0     0.5   0     <span style="color: #BB0000;">NA</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> M      60    3.06  2.69   4    3.5    0     8     2     1     <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="with_cube">with_cube<a class="anchor" aria-label="anchor" href="#with_cube"></a>
-</h4>
+<div class="section level3">
+<h3 id="with_cube">with_cube<a class="anchor" aria-label="anchor" href="#with_cube"></a>
+</h3>
 <ul>
 <li>
 <code><a href="../reference/with_cube.html">with_cube()</a></code> function is a simplified way of expressing <code><a href="../reference/grouping_sets.html">grouping_sets()</a></code>.</li>
@@ -192,7 +200,7 @@
 <li>
 <code><a href="../reference/with_cube.html">with_cube()</a></code> is particularly useful when you want to include total aggregates of both rows and columns in a cross table.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># compute and add total aggregates of rows and columns in 2x2 cross table using the `with_cube()`</span></span>
 <span><span class="va">web_service_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date_id</span> <span class="op">==</span> <span class="st">'2024-06-30'</span> <span class="op">&amp;</span> <span class="va">gender</span> <span class="op">!=</span> <span class="st">"N"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">gender</span>, <span class="va">age</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/with_cube.html">with_cube</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -202,16 +210,11 @@
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> F       2.28  2.33  2.86  2.67  2.33 2.24   1.48</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> M       1.92  0.92  3.19  1.91  1.31 0.907  2.99</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>      2.08  1.61  3.01  2.23  1.77 1.44   2.30</span></span>
-<span></span>
-<span><span class="co"># `with_cube()` equals to `grouping_sets()` with all possible combinations</span></span>
-<span><span class="co"># web_service_data %&gt;% filter(date_id == '2024-06-30' &amp; gender != "N") %&gt;%</span></span>
-<span><span class="co">#   group_by(gender, age) %&gt;% grouping_sets("gender","age",c("gender","age"), NA) %&gt;%</span></span>
-<span><span class="co">#   summarize(avg_pv_cnt = mean(page_view_cnt)) %&gt;% pivot_wider(names_from = age, values_from = avg_pv_cnt)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>      2.08  1.61  3.01  2.23  1.77 1.44   2.30</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="with_rollup">with_rollup<a class="anchor" aria-label="anchor" href="#with_rollup"></a>
-</h4>
+<div class="section level3">
+<h3 id="with_rollup">with_rollup<a class="anchor" aria-label="anchor" href="#with_rollup"></a>
+</h3>
 <ul>
 <li>
 <code><a href="../reference/with_rollup.html">with_rollup()</a></code> is useful when variables have a hierarchy, because all possible combinations are not necessary.</li>
@@ -222,7 +225,7 @@
 <li>
 <code>group_by(a,b,c)</code> followed by <code><a href="../reference/with_rollup.html">with_rollup()</a></code> equals to <code>grouping_sets((a,b,c), (a,b), (a), NA)</code>.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The variables "age_big" and "age" have a hierarchy. </span></span>
 <span><span class="va">web_service_data_processed</span> <span class="op">&lt;-</span> <span class="va">web_service_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  age_big <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
@@ -231,8 +234,8 @@
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Therefore, if there are results aggregated by "age_big &amp; age", marginal aggregates for "age" are not necessary.</span></span>
-<span><span class="co"># The following code calculates the aggregates for "age_big &amp; age", marginal aggregates for "age_big", and aggregates for the entire data set.</span></span>
+<span><span class="co"># If there are aggregates "age_big &amp; age", marginal aggregates for "age" are not necessary.</span></span>
+<span><span class="co"># The following code computes aggregates for "age_big &amp; age", "age_big", and entire data set.</span></span>
 <span><span class="va">web_service_data_processed</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">age_big</span>, <span class="va">age</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/with_rollup.html">with_rollup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/summarize.html">summarize</a></span><span class="op">(</span></span>
 <span>  user_cnt <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span>,</span>
 <span>  avg_pv_cnt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">page_view_cnt</span><span class="op">)</span></span>
@@ -249,14 +252,7 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> young   30         150       3.77</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> old     <span style="color: #BB0000;">NA</span>         578       2.29</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> young   <span style="color: #BB0000;">NA</span>         422       3.06</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>        <span style="text-decoration: underline;">1</span>000       2.61</span></span>
-<span></span>
-<span><span class="co"># `with_rollup()` equals to `grouping_sets()` with combinations in descending order.</span></span>
-<span><span class="co"># web_service_data_processed %&gt;% group_by(age_big, age) %&gt;% grouping_sets(c("age_big","age"),"age_big",NA) %&gt;% summarize(</span></span>
-<span><span class="co">#   user_cnt = n_distinct(id),</span></span>
-<span><span class="co">#   avg_pv_cnt = mean(page_view_cnt)</span></span>
-<span><span class="co"># )</span></span></code></pre></div>
-</div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>        <span style="text-decoration: underline;">1</span>000       2.61</span></span></code></pre></div>
 </div>
 </div>
   </div>

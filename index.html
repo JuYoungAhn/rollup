@@ -90,6 +90,15 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"JuYoungAhn/rollup"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="https://CRAN.R-project.org/package=rollup" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/rollup" alt="CRAN_Download_Badge"></a></p>
 </div>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<ul><li><a href="https://juyoungahn.github.io/rollup/articles/tutorial.html">tutorial link</a></li></ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/grouping_sets.html">grouping_sets</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span><span class="op">)</span>,<span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/with_rollup.html">with_rollup</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/with_cube.html">with_cube</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+</div>
 </div>
   </div>
 
