@@ -37,7 +37,7 @@ devtools::install_github("JuYoungAhn/rollup")
 - gender : male(M), female(F)
 - age : age band (categorical)
 - page_view_cnt : pageview count of user on date_id
-- producte_view_cnt : product view count of user on date_id
+- producte_view_cnt_cat : product view count of user on date_id
 ```{r setup}
 library(dplyr)
 library(rollup)
