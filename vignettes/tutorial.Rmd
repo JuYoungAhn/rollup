@@ -1,7 +1,7 @@
 ---
 title: "rollup"
 author: "Ju Young Ahn"
-date: "2024-07-30"
+date: "2024-08-27"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{rollup}
@@ -24,6 +24,13 @@ suppressPackageStartupMessages(library(rollup))
 
 ## Usage
 ### Sample data
+##### Description of sample data
+- date_id : yyyy-mm-dd
+- id : user unique id
+- gender : male(M), female(F)
+- age : age band (categorical)
+- page_view_cnt : pageview count of user on date_id
+- producte_view_cnt : product view count of user on date_id
 ```{r setup}
 library(dplyr)
 library(rollup)
@@ -32,53 +39,66 @@ web_service_data %>% head
 ```
 
 ### grouping_sets
-
+- `grouping_sets` is useful when multiple group-by operations are needed.
 - `grouping_sets(a)` is equivalent to the single grouping set operation `group_by(a)`.
-- `grouping_sets(a,b)` is equivalent to row bind of `group_by(a)` and `group_by(b)`.
+- `grouping_sets(a,b)` is equivalent to row binding of `group_by(a)` and `group_by(b)`.
+- `grouping_sets((a,b),a,b, NA)` is equivalent to row binding of `group_by(a,b)`, `group_by(a)`, `group_by(b)` and without implementing the `group_by` operation. 
 ```{r warning=FALSE}
 library(tidyr)
-# avg_pv_cnt group by (gender, age, (gender, age))
+# compute average of `page_view_cnt` group by "gender", "age", and "gender & age", along with the overall average.
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
-  group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age')) %>% 
+  group_by(gender, age) %>% grouping_sets('gender', 'age', c('gender','age'), NA) %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt))
 
-# avg_pv_cnt group by ((gender, age, product_view_cnt_cat), product_view_cnt_cat)
+# compute average of `page_view_cnt` group by "gender & age & product_view_cnt_cat" along with the marginal average with regard to "product_view_cnt_cat".
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age, product_view_cnt_cat) %>% grouping_sets('product_view_cnt_cat', c('product_view_cnt_cat', 'gender','age')) %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = product_view_cnt_cat, values_from = avg_pv_cnt)
 ```
 
 ### with_cube
-
-- `with_cube()` adds all possible combinations of grouping variables
-- `with_cube()` easily adds row sum and column sum in a cross table
+- `with_cube()` function is a simplified way of expressing `grouping_sets()`. 
+- `with_cube()` is used when all possible combinations of variables are needed. 
 - `group_by(a,b,c)` followed by `with_cube()` equals to `grouping_sets((a,b,c), (a,b), (a,c), (b,c), a, b, c, NA)`.
+- `with_cube()` is particularly useful when you want to include total aggregates of both rows and columns in a cross table.
 
 ```{r warning=FALSE}
-# add sub-total rows to 2x2 cross table using with_cube()
+# compute and add total aggregates of rows and columns in 2x2 cross table using the `with_cube()`
 web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>% 
   group_by(gender, age) %>% with_cube() %>% 
   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 
-# with_cube equals to grouping_sets with all possible combinations
-web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
-  group_by(gender, age) %>% grouping_sets("gender","age",c("gender","age"), NA) %>%
-  summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
+# `with_cube()` equals to `grouping_sets()` with all possible combinations
+# web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
+#   group_by(gender, age) %>% grouping_sets("gender","age",c("gender","age"), NA) %>%
+#   summarize(avg_pv_cnt = mean(page_view_cnt)) %>% pivot_wider(names_from = age, values_from = avg_pv_cnt)
 ```
 
 ### with_rollup
-
-- `with_rollup()` is an extension of the `group_by` clause that produces sub-total rows alongside grouped rows. 
+- `with_rollup()` is useful when variables have a hierarchy, because all possible combinations are not necessary.
+- `with_rollup()` equals to `grouping_sets()` with combinations in descending order.
 - `group_by(a,b)` followed by `with_rollup()` equals to `grouping_sets((a,b), a, NA)`.
 - `group_by(a,b,c)` followed by `with_rollup()` equals to `grouping_sets((a,b,c), (a,b), (a), NA)`.
 
 ```{r warning=FALSE}
-web_service_data %>% 
-  group_by(date_id) %>% with_rollup() %>% 
-  summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
+# The variables "age_big" and "age" have a hierarchy. 
+web_service_data_processed <- web_service_data %>% mutate(
+  age_big = case_when(
+    age %in% c(10,20,30) ~ 'young',
+    age %in% c(40,50,60) ~ 'old'  
+  )
+)
 
-# with_rollup equals to grouping_sets with all possible combinations in descending order
-web_service_data %>%
-  group_by(date_id) %>% grouping_sets("date_id", NA) %>%
-  summarize(user_cnt = n_distinct(if_else(page_view_cnt > 0, id, NA)))
+# Therefore, if there are results aggregated by "age_big & age", marginal aggregates for "age" are not necessary.
+# The following code calculates the aggregates for "age_big & age", marginal aggregates for "age_big", and aggregates for the entire data set.
+web_service_data_processed %>% group_by(age_big, age) %>% with_rollup() %>% summarize(
+  user_cnt = n_distinct(id),
+  avg_pv_cnt = mean(page_view_cnt)
+)
+
+# `with_rollup()` equals to `grouping_sets()` with combinations in descending order.
+# web_service_data_processed %>% group_by(age_big, age) %>% grouping_sets(c("age_big","age"),"age_big",NA) %>% summarize(
+#   user_cnt = n_distinct(id),
+#   avg_pv_cnt = mean(page_view_cnt)
+# )
 ```
