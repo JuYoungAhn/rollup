@@ -1,8 +1,13 @@
 ---
-title: "rollup"
+title: "Getting Started with rollup Package"
 author: "Ju Young Ahn"
 date: "2024-08-27"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+  toc: true
+  toc_float: true
+  toc_collapsed: true
+toc: true
 vignette: >
   %\VignetteIndexEntry{rollup}
   %\VignetteEngine{knitr::rmarkdown}
@@ -43,7 +48,7 @@ mtcars %>% group_by(vs, am) %>% with_cube() %>%
   summarize(n=n(), avg_mpg=mean(mpg))
 ```
 
-## Practical data aggregation using rollup
+## Practical example
 - This example shows how to compute the average pageview count grouped by various combinations of gender and age.
 - In this section, you will see **why the rollup package is useful** by exploring practical data examples.
 
@@ -100,7 +105,6 @@ web_service_data %>% filter(date_id == '2024-06-30' & gender != "N") %>%
 ### with_rollup
 - `with_rollup()` creates hierarchical aggregations by progressively reducing the number of grouping variables.
 - `with_rollup()` is particulary useful **when variables have a hierarchy**, because all possible combinations are not necessary.
-- `with_rollup()` equals to `grouping_sets()` with combinations in descending order.
 - `group_by(a,b)` followed by `with_rollup()` equals to `grouping_sets(c('a','b'), 'a', NA)`.
 - `group_by(a,b,c)` followed by `with_rollup()` equals to `grouping_sets(c('a','b','c'), ('a','b'), ('a'), NA)`.
 
