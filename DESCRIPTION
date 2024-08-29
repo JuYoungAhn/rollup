@@ -1,6 +1,6 @@
 Package: rollup
 Title: A Tidy Grouping Set Aggregation
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: 
    person("Ju Young", "Ahn", , "juyoung.ahn@snu.ac.kr", role = c("aut", "cre"), 
           comment = c(ORCID = "0009-0008-4613-3438"))
@@ -24,4 +24,4 @@ Imports:
   utils,
   magrittr,
   sparklyr
-URL: https://juyoungahn.github.io/rollup
+URL: https://juyoungahn.github.io/rollup/
