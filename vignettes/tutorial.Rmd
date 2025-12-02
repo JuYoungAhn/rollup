@@ -48,6 +48,32 @@ mtcars %>% group_by(vs, am) %>% with_cube() %>%
   summarize(n=n(), avg_mpg=mean(mpg))
 ```
 
+## New Features: Custom Total Labels and Positioning
+
+### Custom Total Labels
+By default, total/subtotal rows have `NA` values in grouping columns. You can replace these with custom labels using the `total_label` parameter:
+
+```{r warning=FALSE}
+# Replace NA with "Total" in total rows
+mtcars %>% group_by(vs, am) %>% 
+  with_rollup(total_label = "Total") %>% 
+  summarize(n=n(), avg_mpg=mean(mpg))
+```
+
+### Moving Total Rows to Top
+Use `total_on_top = TRUE` to display total/subtotal rows at the beginning of the result:
+
+```{r warning=FALSE}
+# Total rows appear first
+mtcars %>% group_by(vs, am) %>% 
+  with_cube(total_label = "Grand Total", total_on_top = TRUE) %>% 
+  summarize(n=n(), avg_mpg=mean(mpg))
+```
+
+These parameters work with `grouping_sets()`, `with_rollup()`, and `with_cube()` functions.
+
+```
+
 ## Practical example
 - This example shows how to compute the average pageview count grouped by various combinations of gender and age.
 - In this section, you will see **why the rollup package is useful** by exploring practical data examples.

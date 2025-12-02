@@ -28,4 +28,29 @@ mtcars %>% group_by(vs, am) %>% with_rollup() %>%
 mtcars %>% group_by(vs, am) %>% with_cube() %>% 
   summarize(n=n(), avg_mpg=mean(mpg))
 
+# Customize total labels and position
+mtcars %>% group_by(vs, am) %>% 
+  with_rollup(total_label = "Total", total_on_top = TRUE) %>% 
+  summarize(n=n(), avg_mpg=mean(mpg))
 ```
+
+## New Features
+
+### Custom Total Labels
+Replace `NA` values in total rows with custom labels:
+```r
+mtcars %>% group_by(vs, am) %>% 
+  with_rollup(total_label = "Total") %>% 
+  summarize(n=n(), avg_mpg=mean(mpg))
+```
+
+### Total Rows on Top
+Move total/subtotal rows to the top of the result:
+```r
+mtcars %>% group_by(vs, am) %>% 
+  with_cube(total_label = "Grand Total", total_on_top = TRUE) %>% 
+  summarize(n=n(), avg_mpg=mean(mpg))
+```
+
+These parameters work with `grouping_sets()`, `with_rollup()`, and `with_cube()`.
+
