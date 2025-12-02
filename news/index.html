@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rollup</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -59,8 +59,31 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.1.0" id="rollup-010">rollup 0.1.0<a class="anchor" aria-label="anchor" href="#rollup-010"></a></h2>
-<ul><li>Added a <code>pkgdown</code> website for package description</li></ul></div>
+<h2 class="page-header" data-toc-text="0.1.0" id="rollup-010">rollup 0.1.0<small>2024-08-29</small><a class="anchor" aria-label="anchor" href="#rollup-010"></a></h2>
+<ul><li>Added a <code>pkgdown</code> website for package description</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.0" id="rollup-020-development">rollup 0.2.0 (Development)<a class="anchor" aria-label="anchor" href="#rollup-020-development"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
+<ul><li>Added <code>total_label</code> parameter to <code><a href="../reference/grouping_sets.html">grouping_sets()</a></code>, <code><a href="../reference/with_rollup.html">with_rollup()</a></code>, and <code><a href="../reference/with_cube.html">with_cube()</a></code>
+<ul><li>Allows customizing the label for total/subtotal rows (default: <code>NULL</code> keeps <code>NA</code>)</li>
+<li>Example: <code>with_rollup(total_label = "Total")</code>
+</li>
+</ul></li>
+<li>Added <code>total_on_top</code> parameter to <code><a href="../reference/grouping_sets.html">grouping_sets()</a></code>, <code><a href="../reference/with_rollup.html">with_rollup()</a></code>, and <code><a href="../reference/with_cube.html">with_cube()</a></code>
+<ul><li>When <code>TRUE</code>, moves total/subtotal rows to the top of the result (default: <code>FALSE</code>)</li>
+<li>Example: <code>with_cube(total_label = "Grand Total", total_on_top = TRUE)</code>
+</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-0-2-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-2-0"></a></h3>
+<ul><li>Enhanced <code><a href="../reference/summarize_rollup.html">summarize_rollup()</a></code> to handle custom total labels and positioning</li>
+<li>Improved compatibility with both numeric and character grouping variables</li>
+<li>Maintained backward compatibility - existing code continues to work without changes</li>
+</ul></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -75,7 +98,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

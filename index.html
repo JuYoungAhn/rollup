@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rollup</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -96,7 +96,9 @@
 <div class="section level2">
 <h2 id="in-a-nutshell">In a Nutshell<a class="anchor" aria-label="anchor" href="#in-a-nutshell"></a>
 </h2>
-<ul><li>If you want to learn more about <code>rollup</code>, please refer to the <a href="https://juyoungahn.github.io/rollup/articles/tutorial.html">Tutorial</a>.</li></ul>
+<ul>
+<li>If you want to learn more about <code>rollup</code>, please refer to the <a href="https://juyoungahn.github.io/rollup/articles/tutorial.html">Tutorial</a>.</li>
+</ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/grouping_sets.html">grouping_sets</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span><span class="op">)</span>,<span class="cn">NA</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="reference/summarize.html">summarize</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>, avg_mpg<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
@@ -105,7 +107,35 @@
 <span>  <span class="fu"><a href="reference/summarize.html">summarize</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>, avg_mpg<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/with_cube.html">with_cube</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/summarize.html">summarize</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>, avg_mpg<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Customize total labels and position</span></span>
+<span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/with_rollup.html">with_rollup</a></span><span class="op">(</span>total_label <span class="op">=</span> <span class="st">"Total"</span>, total_on_top <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="reference/summarize.html">summarize</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>, avg_mpg<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="new-features">New Features<a class="anchor" aria-label="anchor" href="#new-features"></a>
+</h2>
+<div class="section level3">
+<h3 id="custom-total-labels">Custom Total Labels<a class="anchor" aria-label="anchor" href="#custom-total-labels"></a>
+</h3>
+<p>Replace <code>NA</code> values in total rows with custom labels:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/with_rollup.html">with_rollup</a></span><span class="op">(</span>total_label <span class="op">=</span> <span class="st">"Total"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/summarize.html">summarize</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>, avg_mpg<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="total-rows-on-top">Total Rows on Top<a class="anchor" aria-label="anchor" href="#total-rows-on-top"></a>
+</h3>
+<p>Move total/subtotal rows to the top of the result:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu">group_by</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/with_cube.html">with_cube</a></span><span class="op">(</span>total_label <span class="op">=</span> <span class="st">"Grand Total"</span>, total_on_top <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/summarize.html">summarize</a></span><span class="op">(</span>n<span class="op">=</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>, avg_mpg<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>These parameters work with <code><a href="reference/grouping_sets.html">grouping_sets()</a></code>, <code><a href="reference/with_rollup.html">with_rollup()</a></code>, and <code><a href="reference/with_cube.html">with_cube()</a></code>.</p>
+</div>
 </div>
 </div>
   </div>
@@ -137,7 +167,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Ju Young Ahn <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0008-4613-3438" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Ju Young Ahn <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0008-4613-3438" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -154,7 +184,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
