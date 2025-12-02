@@ -213,34 +213,47 @@ at the beginning of the result:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> 1           1               7    28.4</span></span></code></pre></div>
 <p>These parameters work with <code><a href="../reference/grouping_sets.html">grouping_sets()</a></code>,
 <code><a href="../reference/with_rollup.html">with_rollup()</a></code>, and <code><a href="../reference/with_cube.html">with_cube()</a></code> functions.</p>
-<pre><code>
-## Practical example
-- This example shows how to compute the average pageview count grouped by various combinations of gender and age.
-- In this section, you will see **why the rollup package is useful** by exploring practical data examples.
-
-### Web service data 
-##### Description of data
-- date_id : yyyy-mm-dd
-- id : user unique id
-- gender : male(M), female(F)
-- age : age band (categorical)
-- page_view_cnt : pageview count of user on date_id
-- product_view_cnt_cat : decile category of the product view count for a user on date_id.
-
-``` r
-library(dplyr)
-library(rollup)
-data("web_service_data") # web_service_data of rollup package
-web_service_data %&gt;% head
-#&gt;  [38;5;246m# A tibble: 6 × 6 [39m
-#&gt;   date_id       id gender age   page_view_cnt product_view_cnt_cat
-#&gt;    [3m [38;5;246m&lt;chr&gt; [39m [23m       [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;fct&gt; [39m [23m          [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;fct&gt; [39m [23m               
-#&gt;  [38;5;250m1 [39m 2024-06-24    19 M      40                0 60%                 
-#&gt;  [38;5;250m2 [39m 2024-06-24    34 M      40                5 70%                 
-#&gt;  [38;5;250m3 [39m 2024-06-24    44 F      50               12 100%                
-#&gt;  [38;5;250m4 [39m 2024-06-24    57 M      60               87 20%                 
-#&gt;  [38;5;250m5 [39m 2024-06-24    65 F      50                1 100%                
-#&gt;  [38;5;250m6 [39m 2024-06-24    86 F      40                3 90%</code></pre>
+</div>
+</div>
+<div class="section level2">
+<h2 id="practical-example">Practical example<a class="anchor" aria-label="anchor" href="#practical-example"></a>
+</h2>
+<ul>
+<li>This example shows how to compute the average pageview count grouped
+by various combinations of gender and age.</li>
+<li>In this section, you will see <strong>why the rollup package is
+useful</strong> by exploring practical data examples.</li>
+</ul>
+<div class="section level3">
+<h3 id="web-service-data">Web service data<a class="anchor" aria-label="anchor" href="#web-service-data"></a>
+</h3>
+<div class="section level5">
+<h5 id="description-of-data">Description of data<a class="anchor" aria-label="anchor" href="#description-of-data"></a>
+</h5>
+<ul>
+<li>date_id : yyyy-mm-dd</li>
+<li>id : user unique id</li>
+<li>gender : male(M), female(F)</li>
+<li>age : age band (categorical)</li>
+<li>page_view_cnt : pageview count of user on date_id</li>
+<li>product_view_cnt_cat : decile category of the product view count for
+a user on date_id.</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://juyoungahn.github.io/rollup/">rollup</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"web_service_data"</span><span class="op">)</span> <span class="co"># web_service_data of rollup package</span></span>
+<span><span class="va">web_service_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
+<span><span class="co">#&gt;   date_id       id gender age   page_view_cnt product_view_cnt_cat</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2024-06-24    19 M      40                0 60%                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2024-06-24    34 M      40                5 70%                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2024-06-24    44 F      50               12 100%                </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2024-06-24    57 M      60               87 20%                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2024-06-24    65 F      50                1 100%                </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2024-06-24    86 F      40                3 90%</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="grouping_sets">grouping_sets<a class="anchor" aria-label="anchor" href="#grouping_sets"></a>
