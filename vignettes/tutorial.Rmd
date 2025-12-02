@@ -74,8 +74,6 @@ mtcars %>% group_by(vs, am) %>%
 
 These parameters work with `grouping_sets()`, `with_rollup()`, and `with_cube()` functions.
 
-```
-
 ## Practical example
 - This example shows how to compute the average pageview count grouped by various combinations of gender and age.
 - In this section, you will see **why the rollup package is useful** by exploring practical data examples.
