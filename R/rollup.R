@@ -201,8 +201,31 @@ summarize_rollup <- function(object, ...) {
   
   if(is.null(total_on_top)) total_on_top <- FALSE
 
-  result_tmp <- lapply(df_list, function(x) {
-    summarized_df <- dplyr::summarize(x, !!!funcs)
+  # Get all grouping columns to handle NA preservation
+  all_grouping_cols <- unique(unlist(lapply(df_list, function(df) {
+    if(inherits(df, "grouped_df") || inherits(df, "tbl_spark")) {
+      dplyr::group_vars(df)
+    } else {
+      character(0)
+    }
+  })))
+  
+  # Placeholder for original NA values
+  na_placeholder <- ".__ROLLUP_ORIGINAL_NA__."
+  
+  # Replace original NAs with placeholder in all df_list items
+  df_list_processed <- lapply(df_list, function(df) {
+    for(col in all_grouping_cols) {
+      if(col %in% colnames(df)) {
+        df <- df %>%
+          dplyr::mutate(!!col := ifelse(is.na(!!rlang::sym(col)), na_placeholder, as.character(!!rlang::sym(col))))
+      }
+    }
+    df
+  })
+  
+  result_tmp <- lapply(df_list_processed, function(x) {
+    dplyr::summarize(x, !!!funcs)
   })
 
   common_cols <- Reduce(intersect, lapply(result_tmp, colnames))
@@ -228,13 +251,21 @@ summarize_rollup <- function(object, ...) {
   exclude_common_cols <- cols[!cols %in% common_cols]
   binded_result <- binded_result %>% ungroup() %>% select(all_of(c(exclude_common_cols, common_cols)))
   
-  # Apply total_label if specified - AFTER binding (bind_rows adds NA for missing columns)
+  # Apply total_label if specified - only for rollup-generated NAs
   if(!is.null(total_label)) {
     for(col in all_exclude_cols) {
       if(col %in% colnames(binded_result)) {
         binded_result <- binded_result %>%
-          dplyr::mutate(!!col := ifelse(is.na(!!rlang::sym(col)), total_label, as.character(!!rlang::sym(col))))
+          dplyr::mutate(!!col := ifelse(is.na(!!rlang::sym(col)), total_label, !!rlang::sym(col)))
       }
+    }
+  }
+  
+  # Restore original NAs from placeholder
+  for(col in all_exclude_cols) {
+    if(col %in% colnames(binded_result)) {
+      binded_result <- binded_result %>%
+        dplyr::mutate(!!col := ifelse(!!rlang::sym(col) == na_placeholder, NA_character_, !!rlang::sym(col)))
     }
   }
   
