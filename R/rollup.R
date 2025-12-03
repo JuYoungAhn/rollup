@@ -232,48 +232,59 @@ summarize_rollup <- function(object, ...) {
   if(!is.null(total_label)) {
     for(col in all_exclude_cols) {
       if(col %in% colnames(binded_result)) {
-        # Store original NA positions before converting to character
-        na_positions <- is.na(binded_result[[col]])
-        # Convert to character
-        binded_result[[col]] <- as.character(binded_result[[col]])
-        # Replace only the original NA positions with total_label
-        binded_result[[col]][na_positions] <- total_label
+        binded_result <- binded_result %>%
+          dplyr::mutate(!!col := ifelse(is.na(!!rlang::sym(col)), total_label, as.character(!!rlang::sym(col))))
       }
     }
   }
   
   # Move total rows to top if total_on_top is TRUE
-  if(total_on_top && !is.null(total_label) && length(exclude_common_cols) > 0) {
-    # Identify total rows (rows where all grouping columns equal total_label)
-    checks <- sapply(exclude_common_cols, function(col) {
-      binded_result[[col]] == total_label
-    })
-    if(is.matrix(checks)) {
-      is_total_row <- rowSums(checks, na.rm = TRUE) == length(exclude_common_cols)
-    } else {
-      is_total_row <- checks
-    }
+  if(total_on_top && length(exclude_common_cols) > 0) {
+    # For Spark DataFrames, compute() before arrange to materialize the result
+    is_spark <- inherits(binded_result, "tbl_spark")
     
-    if(sum(is_total_row, na.rm = TRUE) > 0) {
-      total_rows <- binded_result[which(is_total_row), , drop = FALSE]
-      other_rows <- binded_result[which(!is_total_row), , drop = FALSE]
-      binded_result <- bind_rows(total_rows, other_rows)
-    }
-  } else if(total_on_top && length(exclude_common_cols) > 0) {
-    # If total_on_top but no total_label, move NA rows to top
-    checks <- sapply(exclude_common_cols, function(col) {
-      is.na(binded_result[[col]])
-    })
-    if(is.matrix(checks)) {
-      is_total_row <- rowSums(checks, na.rm = TRUE) == length(exclude_common_cols)
+    if(!is.null(total_label)) {
+      # Create a condition for total rows (all grouping columns equal total_label)
+      total_condition <- paste0(
+        "(",
+        paste(sapply(exclude_common_cols, function(col) {
+          paste0("`", col, "` == '", total_label, "'")
+        }), collapse = " & "),
+        ")"
+      )
+      
+      # Create ordering column: 0 for total rows, 1 for others
+      binded_result <- binded_result %>%
+        dplyr::mutate(.order_tmp = ifelse(!!rlang::parse_expr(total_condition), 0, 1))
+      
+      if(is_spark) {
+        binded_result <- binded_result %>% dplyr::compute()
+      }
+      
+      binded_result <- binded_result %>%
+        dplyr::arrange(.order_tmp) %>%
+        dplyr::select(-.order_tmp)
     } else {
-      is_total_row <- checks
-    }
-    
-    if(sum(is_total_row, na.rm = TRUE) > 0) {
-      total_rows <- binded_result[which(is_total_row), , drop = FALSE]
-      other_rows <- binded_result[which(!is_total_row), , drop = FALSE]
-      binded_result <- bind_rows(total_rows, other_rows)
+      # If total_on_top but no total_label, move NA rows to top
+      na_condition <- paste0(
+        "(",
+        paste(sapply(exclude_common_cols, function(col) {
+          paste0("is.na(`", col, "`)")
+        }), collapse = " & "),
+        ")"
+      )
+      
+      # Create ordering column: 0 for NA rows, 1 for others
+      binded_result <- binded_result %>%
+        dplyr::mutate(.order_tmp = ifelse(!!rlang::parse_expr(na_condition), 0, 1))
+      
+      if(is_spark) {
+        binded_result <- binded_result %>% dplyr::compute()
+      }
+      
+      binded_result <- binded_result %>%
+        dplyr::arrange(.order_tmp) %>%
+        dplyr::select(-.order_tmp)
     }
   }
   

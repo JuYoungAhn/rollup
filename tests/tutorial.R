@@ -1,6 +1,6 @@
 library(dplyr)
 library(rollup)
-source("rollup/R/rollup.R")
+source("../rollup/R/rollup.R")
 
 data("web_service_data")
 web_service_data %>% head
